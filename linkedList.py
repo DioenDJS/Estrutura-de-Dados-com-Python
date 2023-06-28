@@ -6,7 +6,7 @@ class LinkedList:
     """
 
     def __init__(self):
-        self.head = None  # Atributo cabeça que vai repesentar o proxima referencia
+        self.head = None  # Atributo cabeça que vai ser a cabeça do nó, repesentar o proxima referencia
         self._size = 0  # Atributo não é necessario por que se precisassemos desta informação poderiamos contar os nós
 
     """
@@ -34,15 +34,19 @@ class LinkedList:
     # def set(self, index, elem):
         # a = lista.set(0, 6)
 
-    #Recuperar um elemento da lista
-    def __getitem__(self, index):  # sobrecarga de operadores para utilizarmos os cochetes [] na operação
-        # a = lista[0]
-        pointer = self.head
+    def _getnode(self, index):
+        pointer = self.head  #A variavel auxiliar recebe o valor da cabeça
         for i in range(index):  # como conhecemos o numero de vez que precisaremos percorrer vamos utilizar o for
             if pointer:  # vamos verificar se o pointer nao for None entao a lista nao esta vazia
                 pointer = pointer.next
             else:  # se ele for None vamos disparar uma exception IndexError
                 raise IndexError("list index out of range")
+        return pointer
+
+    #Recuperar um elemento da lista
+    def __getitem__(self, index):  # sobrecarga de operadores para utilizarmos os cochetes [] na operação
+        # a = lista[0]
+        pointer = self._getnode(index)
 
         if pointer: # se o pointer em que o for terminou nao for vazio
             return pointer.data  # vai ser retornado o dado
@@ -51,12 +55,7 @@ class LinkedList:
     #Alterar algum elemento
     def __setitem__(self, index, elem):
         # lista[0] = 20
-        pointer = self.hear
-        for i in range(index):
-            if pointer:
-                pointer = pointer.next
-            else:
-                raise IndexError("list index out of range")
+        pointer = self._getnode(index)
 
         if pointer:
             pointer.data = elem
@@ -74,3 +73,16 @@ class LinkedList:
             pointer = pointer.next
             i += 1
         raise ValueError(f'{elem} is not in list')
+
+
+    def insert(self, index, elem):
+        node = Node(elem)  #Criamos um nó
+        if index == 0:  #Se a inserção for no inicio da lista
+            node.next = self.head  #A cabeça do no passa para o valor da ref erencia do proximo
+            self.head = node  #E a cabeça recebe o nó criado
+        else:
+            pointer = self._getnode(index-1)  #Vamos receber o valor do index do antecessos que nos queremos alterar
+            node.next = pointer.next
+            pointer.next = node
+        self._size += 1
+
