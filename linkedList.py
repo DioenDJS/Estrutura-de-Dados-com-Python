@@ -65,6 +65,7 @@ class LinkedList:
 
     #Busca pelo elemento e retorna o index se for encontrado
     def index(self, elem):
+        """Retorna o índice do elem na lista"""
         pointer = self.head
         i = 0
         while(pointer):  #Vamos percorrer a lista procurando o elemento enquanto o nó não estiver vazio
@@ -78,11 +79,46 @@ class LinkedList:
     def insert(self, index, elem):
         node = Node(elem)  #Criamos um nó
         if index == 0:  #Se a inserção for no inicio da lista
-            node.next = self.head  #A cabeça do no passa para o valor da ref erencia do proximo
+            node.next = self.head  #A cabeça do nó passa para o valor da referencia do proximo
             self.head = node  #E a cabeça recebe o nó criado
         else:
             pointer = self._getnode(index-1)  #Vamos receber o valor do index do antecessos que nos queremos alterar
             node.next = pointer.next
             pointer.next = node
         self._size += 1
+
+
+    def remove(self, elem):
+        if self.head == None:
+            raise ValueError(f"{elem} is not in list")
+        elif self.head.data == elem:  # Se o valor da cabeça for igual ao do elemento que quermos remover
+            self.head = self.head.next
+            self._size -= 1
+            return True
+        else:
+            ancestor = self.head  # valor do antecesor que queremos remover
+            pointer = self.head.next  # do proximo que queromes removes
+            while(pointer):
+                if pointer.data == elem:
+                    ancestor.next = pointer.next
+                    pointer.next = None
+                ancestor = pointer
+                pointer = pointer.next
+                # ancestor = ancestor.next - outra forma de pode fazer esta atribuição
+                self._size -= 1
+            return True
+        raise ValueError(f'{elem} is not in list')
+
+
+    def __repr__(self):
+        r = ""
+        pointer = self.head
+        while(pointer):
+            r = r + str(pointer.data) + "->"
+            pointer = pointer.next
+        return r
+
+
+    def __str__(self):
+        return self.__repr__()
 
